@@ -1,9 +1,10 @@
 <template>
   <div id="nav">
-    <router-link  class="event-link"
-    :to="{name: 'EventList'}">Home</router-link> |
-    <router-link  class="event-link"
-    :to="{name: 'About'}">About</router-link>
+    <router-link class="event-link" :to="{ name: 'EventList' }"
+      >Home</router-link
+    >
+    |
+    <router-link class="event-link" :to="{ name: 'About' }">About</router-link>
   </div>
 
   <!-- new element -->
