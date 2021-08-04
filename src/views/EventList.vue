@@ -90,6 +90,7 @@ export default {
     })
   },
   beforeRouteEnter(routeTo, routeFrom,next){
+    NProgress.start()
     EventService.getEvents(2,parseInt(routeTo.query.page) || 1 ).then((response)=> {
       next((comp)=>{
         comp.events=response.data
@@ -103,6 +104,22 @@ export default {
       NProgress.done()
     })
   },
+
+  beforeRouteUpdate(routeTo,routeFrom,next){
+    NProgress.start()
+    EventService.getEvents(2,parseInt(routeTo.query.page) || 1 ).then((response)=>{
+      this.events = response.data //<-----
+      this.totalEvents = response.headers['x-total-count'] // <-----
+      next() // <-----
+    })
+    .catch(() => {
+      next({ name:'NetworkError'})
+    })
+    .finally(() =>{
+      NProgress.done()
+    })
+  },
+
   inject: ['GStore']
 }
 </script>
