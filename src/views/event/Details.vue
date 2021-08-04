@@ -1,6 +1,9 @@
 <template>
-  <p>{{ event.time }} on {{ event.dat }} @ {{ event.location }}</p>
-  <p>{{ event.description }}</p>
+  <div v-if="event">
+        <h2>NAME: {{ event.name }}</h2>
+        <p>ID: {{ event._id }}</p>
+        <p>TRIP: {{event.trips}}</p>
+    </div>
 </template>
 
 <script>

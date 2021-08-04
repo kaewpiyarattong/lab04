@@ -3,15 +3,11 @@
     <h1>{{ event.title }}</h1>
     <div id="nav">
       <router-link :to="{ name: 'EventDetails', params: { id } }">
-        Details
-      </router-link>
-      |
-      <router-link :to="{ name: 'EventRegister', params: { id } }">
-        Register
+        Passenger Details
       </router-link>
       |
       <router-link :to="{ name: 'EventEdit', params: { id } }">
-        Edit
+        Airline Details
       </router-link>
     </div>
     <router-view :event="event" />
