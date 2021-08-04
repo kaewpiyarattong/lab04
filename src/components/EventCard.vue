@@ -1,9 +1,11 @@
 <template>
-  <router-link 
+  <router-link
     class="event-link"
-    :to="{name: 'EventDetails' , params: {id: event._id}}">
+    :to="{ name: 'EventDetails', params: { id: event._id } }"
+  >
     <div class="event-card">
-      <span>Name: {{ event.name }}</span><br>
+      <span>Name: {{ event.name }}</span
+      ><br />
       <span>Trip: {{ event.trips }}</span>
       <h4>{{ event.title }}</h4>
     </div>
@@ -35,7 +37,7 @@ export default {
   transform: scale(1.01);
   box-shadow: 0 3px 12px 0 rgba(0, 0, 0, 0.2);
 }
-.event-link{
+.event-link {
   color: #2c3e50;
   text-decoration: none;
 }

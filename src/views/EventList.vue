@@ -1,44 +1,45 @@
 <template>
-
+  <div id="flashMessage">{{ GStore.flashMessage }}</div>
   <h1>Events For Good</h1>
   <div class="events">
     <EventCard v-for="event in events" :key="event.id" :event="event" />
-    
-    <div class ="pagination">
+
+    <div class="pagination">
       <router-link
         id="page-prev"
-        :to="{name: 'EventList', query:{page: page - 1, size: size }}" 
+        :to="{ name: 'EventList', query: { page: page - 1, size: size } }"
         rel="prev"
-        v-if="page !=0 ">
+        v-if="page != 0"
+      >
         Prev Page
       </router-link>
 
       <router-link
         id="page-next"
-        :to="{name: 'EventList', query:{page: page + 1,size: size}}" 
+        :to="{ name: 'EventList', query: { page: page + 1, size: size } }"
         rel="next"
-        >
+      >
         Next Page
       </router-link>
-
     </div>
     <div class="pageLimit">
       <router-link
-      id="plus"
-        :to="{name: 'EventList', query:{page: page, size: size + 1}}" 
-        rel="next">
+        id="plus"
+        :to="{ name: 'EventList', query: { page: page, size: size + 1 } }"
+        rel="next"
+      >
         Increase Size
       </router-link>
 
       <router-link
-        id = "delete"
-        :to="{name: 'EventList', query:{page: page, size: size - 1}}" 
+        id="delete"
+        :to="{ name: 'EventList', query: { page: page, size: size - 1 } }"
         rel="prev"
-        v-if="size >1 ">
+        v-if="size > 1"
+      >
         Decrease Size
       </router-link>
-  </div>
-
+    </div>
   </div>
 </template>
 
@@ -47,22 +48,23 @@
 import EventCard from '@/components/EventCard.vue'
 import EventService from '@/services/EventService.js'
 import { watchEffect } from '@vue/runtime-core'
+import NProgress from 'nprogress'
 // import axios from 'axios'
 export default {
   name: 'EventList',
-  props:{
-    page:{
-      type:Number,
+  props: {
+    page: {
+      type: Number,
       required: true
     },
-    size:{
-      type:Number,
+    size: {
+      type: Number,
       required: true
     }
   },
-  computed:{
-    hasNextPage(){
-      let totalPages = Math.ceil(this.totalEvents/this.size)
+  computed: {
+    hasNextPage() {
+      let totalPages = Math.ceil(this.totalEvents / this.size)
       return this.page < totalPages
     }
   },
@@ -77,16 +79,31 @@ export default {
   },
   created() {
     watchEffect(() => {
-      EventService.getEvents( this.size, this.page)
-      .then((response) => {
-        this.events = response.data.data
-        this.totalEvents = response.headers['x-total-count']
-      })
-      .catch((error) => {
-        console.log(error)
+      EventService.getEvents(this.size, this.page)
+        .then((response) => {
+          this.events = response.data.data
+          this.totalEvents = response.headers['x-total-count']
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    })
+  },
+  beforeRouteEnter(routeTo, routeFrom,next){
+    EventService.getEvents(2,parseInt(routeTo.query.page) || 1 ).then((response)=> {
+      next((comp)=>{
+        comp.events=response.data
+        comp.totalEvents=response.headers['x-total-count']
       })
     })
-  }
+    .catch(() => {
+      next({ name:'NetworkError'})
+    })
+    .finally(() =>{
+      NProgress.done()
+    })
+  },
+  inject: ['GStore']
 }
 </script>
 <style scoped>
@@ -95,37 +112,49 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-.pagination{
+.pagination {
   display: flex;
-  width: 290px
+  width: 290px;
 }
-.pagination a{
+.pagination a {
   flex: 1;
   text-decoration: none;
   color: #2c3e50;
 }
-#page-prev{
+#page-prev {
   text-align: left;
 }
-#page-next{
+#page-next {
   text-align: right;
 }
-#plus{
+#plus {
   text-align: left;
 }
-#delete{
+#delete {
   text-align: right;
 }
-.pageLimit{
+.pageLimit {
   display: flex;
   width: 290px;
   align-items: center;
   text-align: center;
-  
 }
-.pageLimit a{
+.pageLimit a {
   flex: 1;
   text-decoration: none;
   color: #2c3e50;
+}
+
+@keyframes yellowfade {
+  from {
+    background: yellow;
+  }
+  to {
+    background: transparent;
+  }
+}
+#flashMessage {
+  animation-name: yellowfade;
+  animation-duration: 5s;
 }
 </style>
