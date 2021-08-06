@@ -2,7 +2,7 @@
   <div id="flashMessage">{{ GStore.flashMessage }}</div>
   <h1>Events For Good</h1>
   <div class="events">
-    <EventCard v-for="event in events" :key="event.id" :event="event" />
+    <EventCard v-for="event in events" :key="event.id" :event="event" :size="size" />
 
     <div class="pagination">
       <router-link
@@ -41,6 +41,7 @@
       </router-link>
     </div>
   </div>
+  {{ GStore.page = size}}
 </template>
 
 <script>
@@ -89,6 +90,7 @@ export default {
         })
     })
   },
+  
   beforeRouteEnter(routeTo, routeFrom,next){
     NProgress.start()
     EventService.getEvents(2,parseInt(routeTo.query.page) || 1 ).then((response)=> {

@@ -19,7 +19,8 @@ export default {
       }, 3000)
       this.$router.push({
         name: 'EventList',
-        params: { id: this.event.id }
+        params: { id: this.event.id },
+        query:{size:this.GStore.page}
       })
     }
   }
